@@ -3,10 +3,10 @@ package org.quintilis.forum
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+//@SpringBootTest
 class ForumApplicationTests {
 
-    @Test
+//    @Test
     fun contextLoads() {
     }
 

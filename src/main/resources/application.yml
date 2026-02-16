@@ -1,0 +1,33 @@
+server:
+  port: 8081 # Porta diferente do Gateway (8080) e Auth (9000)
+
+spring:
+  application:
+    name: forum
+    
+  cache:
+    type: redis
+  data:
+    redis:
+      host: "${CACHE_HOST}"
+      port: "${CACHE_PORT}"
+      password: "${CACHE_PASSWORD}"
+  
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: "jdbc:postgresql://${DB_HOST:localhost}:5432/minecraft"
+    username: "${DB_USERNAME:postgres}"
+    password: "${DB_PASSWORD:postgres}"
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Onde buscar a chave pública para validar o token
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+          issuer-uri: http://localhost:9000
