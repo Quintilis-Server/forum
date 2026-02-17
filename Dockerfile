@@ -4,16 +4,15 @@ FROM maven:3.9-eclipse-temurin-25-noble AS build
 
 WORKDIR /workspace
 
-# Copy common module first for better layer caching
+# 1. Copia o código dos dois módulos inteiros
 COPY common ./common
-COPY forum/pom.xml ./forum/
-COPY forum/.mvn ./forum/.mvn
-COPY forum/mvnw ./forum/
+COPY forum ./forum
 
-# Copy forum source
-COPY forum/src ./forum/src
+# 2. Instala o módulo Common primeiro (para que o Forum consiga achá-lo)
+WORKDIR /workspace/common
+RUN mvn clean install -DskipTests
 
-# Build the application
+# 3. Compila o Forum usando o common que acabou de ser instalado
 WORKDIR /workspace/forum
 RUN mvn clean package -DskipTests
 
