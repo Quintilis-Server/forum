@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
@@ -44,6 +45,9 @@ open class Category: BaseEntity<CategoryDTO> {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at", nullable = false)
     open var createdAt: Instant? = null
+
+    @OneToMany(mappedBy = "category")
+    open var topics: MutableSet<Topic> = mutableSetOf()
     override fun toDTO(): CategoryDTO {
         return CategoryDTO(
             id = this.id ?: UUID.randomUUID(),
@@ -51,7 +55,8 @@ open class Category: BaseEntity<CategoryDTO> {
             slug = this.slug!!,
             description = this.description,
             displayOrder = this.displayOrder!!,
-            createdAt = this.createdAt ?: Instant.now()
+            createdAt = this.createdAt ?: Instant.now(),
+            topics = this.topics.map { it.toDTO() }.toList()
         )
     }
 

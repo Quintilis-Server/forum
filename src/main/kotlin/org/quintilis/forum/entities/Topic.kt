@@ -6,18 +6,22 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.quintilis.common.entities.BaseEntity
+import org.quintilis.common.entities.auth.User
+import org.quintilis.forum.dto.TopicDTO
 import java.time.Instant
 import java.util.UUID
 
 @Entity
 @Table(name = "topics", schema = "forum")
-open class Topic {
+open class Topic: BaseEntity<TopicDTO> {
     @Id
     @ColumnDefault("gen_random_uuid()")
     @Column(name = "id", nullable = false)
@@ -50,7 +54,7 @@ open class Topic {
 
     @ColumnDefault("0")
     @Column(name = "views")
-    open var views: Int? = null
+    open var views: Long? = null
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
@@ -59,4 +63,19 @@ open class Topic {
     @Column(name = "deleted_at")
     open var deletedAt: Instant? = null
 
+    @OneToMany(mappedBy = "topic")
+    open var posts: MutableSet<Post> = mutableSetOf()
+
+    override fun toDTO(): TopicDTO {
+        return TopicDTO(
+            id = this.id,
+            title = this.title!!,
+            slug = this.slug!!,
+            content = this.content!!,
+            views = this.views ?: 0,
+            createdAt = this.createdAt ?: Instant.now(),
+            author = this.author?.toSummaryDTO()!!,
+            posts = this.posts.map { it.toDTO() }.toList(),
+        )
+    }
 }

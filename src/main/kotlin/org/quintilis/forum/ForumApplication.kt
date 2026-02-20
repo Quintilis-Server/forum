@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "org.quintilis.forum"
 ])
 @EntityScan(basePackages = [
+    "org.quintilis.common.entities",
     "org.quintilis.forum.entities" // Apenas entidades do Fórum (incluindo o User simplificado)
 ])
 @EnableJpaRepositories(basePackages = ["org.quintilis.forum.repositories"])

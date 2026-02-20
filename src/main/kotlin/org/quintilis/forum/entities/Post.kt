@@ -9,12 +9,15 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import jakarta.validation.constraints.NotNull
 import org.hibernate.annotations.ColumnDefault
+import org.quintilis.common.entities.BaseEntity
+import org.quintilis.common.entities.auth.User
+import org.quintilis.forum.dto.PostDTO
 import java.time.Instant
 import java.util.UUID
 
 @Entity
 @Table(name = "posts", schema = "forum")
-open class Post {
+open class Post: BaseEntity<PostDTO> {
     @Id
     @ColumnDefault("gen_random_uuid()")
     @Column(name = "id", nullable = false)
@@ -37,5 +40,13 @@ open class Post {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     open var createdAt: Instant? = null
+    override fun toDTO(): PostDTO {
+        return PostDTO(
+            id = this.id,
+            author = this.author?.toSummaryDTO()!!,
+            createdAt = this.createdAt ?: Instant.now(),
+            content = this.content ?: ""
+        )
+    }
 
 }

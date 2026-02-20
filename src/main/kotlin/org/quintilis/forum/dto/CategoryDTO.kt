@@ -11,6 +11,7 @@ data class CategoryDTO(
     val slug: String,
     val description: String?,
     val displayOrder: Int,
+    val topics: List<TopicDTO>,
     val createdAt: Instant
 ): BaseDTO<Category> {
     override fun toEntity(): Category {
