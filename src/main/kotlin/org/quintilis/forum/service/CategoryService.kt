@@ -1,24 +1,34 @@
 package org.quintilis.forum.service
 
+import jakarta.transaction.Transactional
+import java.time.Instant
+import org.quintilis.forum.controller.CategoryController
 import org.quintilis.forum.dto.CategoryDTO
+import org.quintilis.forum.entities.Category
 import org.quintilis.forum.repositories.CategoryRepository
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import java.time.Instant
-import java.util.UUID
 
 @Service
-class CategoryService(
-    private val categoryRepository: CategoryRepository
-) {
-    fun findAll(page:Int): List<CategoryDTO> {
+class CategoryService(private val categoryRepository: CategoryRepository) {
+    @Cacheable("categories_page", key = "#page")
+    fun findAll(page: Int): List<CategoryDTO> {
         val pageable = PageRequest.of(page - 1, 10)
         return categoryRepository.findAll(pageable).map { it.toDTO() }.toList()
     }
 
-    fun create(categoryDTO: CategoryDTO): CategoryDTO {
-        val category = categoryDTO.toEntity()
-        category.id = UUID.randomUUID()
+    @Cacheable("category_slug", key = "#slug")
+    fun findBySlug(slug: String): CategoryDTO? = categoryRepository.findBySlug(slug)?.toDTO()
+
+    @Transactional
+    fun create(categoryDTO: CategoryController.CategoryReceiverDTO): CategoryDTO {
+        val category = Category()
+        category.title = categoryDTO.title
+        category.slug = categoryDTO.slug
+        category.description = categoryDTO.description
+        category.displayOrder = categoryDTO.display_order
+        //        category.id = UUID.randomUUID()
         category.createdAt = Instant.now()
         return categoryRepository.save(category).toDTO()
     }

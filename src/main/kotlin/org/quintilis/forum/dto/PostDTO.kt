@@ -1,12 +1,16 @@
 package org.quintilis.forum.dto
 
-import org.quintilis.common.dto.UserSummaryDTO
 import java.time.Instant
 import java.util.UUID
+import lombok.AllArgsConstructor
+import lombok.NoArgsConstructor
+import org.quintilis.common.dto.UserSummaryDTO
 
+@NoArgsConstructor
+@AllArgsConstructor
 data class PostDTO(
-    val id: UUID?,
-    val author: UserSummaryDTO,
-    val createdAt: Instant,
-    val content: String,
+        var id: UUID?,
+        var author: UserSummaryDTO,
+        var createdAt: Instant,
+        var content: String,
 )

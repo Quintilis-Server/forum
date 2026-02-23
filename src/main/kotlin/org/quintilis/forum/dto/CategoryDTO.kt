@@ -1,19 +1,23 @@
 package org.quintilis.forum.dto
 
-import org.quintilis.common.dto.BaseDTO
-import org.quintilis.forum.entities.Category
 import java.time.Instant
 import java.util.UUID
+import lombok.AllArgsConstructor
+import lombok.NoArgsConstructor
+import org.quintilis.common.dto.BaseDTO
+import org.quintilis.forum.entities.Category
 
+@NoArgsConstructor
+@AllArgsConstructor
 data class CategoryDTO(
-    val id: UUID,
-    val title: String,
-    val slug: String,
-    val description: String?,
-    val displayOrder: Int,
-    val topics: List<TopicDTO>,
-    val createdAt: Instant
-): BaseDTO<Category> {
+        var id: UUID?,
+        var title: String,
+        var slug: String,
+        var description: String?,
+        var displayOrder: Int,
+        var topics: List<TopicDTO>,
+        var createdAt: Instant
+) : BaseDTO<Category> {
     override fun toEntity(): Category {
         return Category().apply {
             this.id = this@CategoryDTO.id
