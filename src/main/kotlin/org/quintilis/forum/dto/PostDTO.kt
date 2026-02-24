@@ -4,7 +4,7 @@ import java.time.Instant
 import java.util.UUID
 import lombok.AllArgsConstructor
 import lombok.NoArgsConstructor
-import org.quintilis.common.dto.UserSummaryDTO
+import org.quintilis.common.dto.auth.UserSummaryDTO
 
 @NoArgsConstructor
 @AllArgsConstructor
