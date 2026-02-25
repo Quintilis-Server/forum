@@ -16,40 +16,34 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/category")
-class CategoryController(
-    private val categoryService: CategoryService
-) {
+class CategoryController(private val categoryService: CategoryService) {
     public data class CategoryReceiverDTO(
-        val title: String,
-        val slug: String,
-        val description: String,
-        val display_order: Int
+            val title: String,
+            val slug: String,
+            val description: String,
+            val display_order: Int,
+            val createTopicPermissionId: Int? = null
     )
 
     @GetMapping("/all")
     @Operation(summary = "Get all categories")
-    fun getAll(
-        @RequestParam(value = "page") pageParam: Int?
-    ): ApiResponse<List<CategoryDTO>> {
+    fun getAll(@RequestParam(value = "page") pageParam: Int?): ApiResponse<List<CategoryDTO>> {
         val page = pageParam ?: 1
         return ApiResponse.success(categoryService.findAll(page))
     }
 
     @GetMapping("/{slug}")
     @Operation(summary = "Get category by slug")
-    fun getBySlug(
-        @PathVariable slug: String
-    ): ApiResponse<CategoryDTO> {
-        val category = categoryService.findBySlug(slug) ?: throw NotFoundException("Category not found")
+    fun getBySlug(@PathVariable slug: String): ApiResponse<CategoryDTO> {
+        val category =
+                categoryService.findBySlug(slug) ?: throw NotFoundException("Category not found")
         return ApiResponse.success(category)
     }
 
     @PostMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create a new category")
-    fun create(
-        @RequestBody categoryDTO: CategoryReceiverDTO
-    ): ApiResponse<CategoryDTO> {
+    fun create(@RequestBody categoryDTO: CategoryReceiverDTO): ApiResponse<CategoryDTO> {
         return ApiResponse.success(categoryService.create(categoryDTO))
     }
 }

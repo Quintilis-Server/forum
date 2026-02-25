@@ -2,6 +2,7 @@ package org.quintilis.forum.service
 
 import jakarta.transaction.Transactional
 import java.time.Instant
+import org.quintilis.common.repositories.PermissionRepository
 import org.quintilis.forum.controller.CategoryController
 import org.quintilis.forum.dto.CategoryDTO
 import org.quintilis.forum.entities.Category
@@ -11,7 +12,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 @Service
-class CategoryService(private val categoryRepository: CategoryRepository) {
+class CategoryService(
+        private val categoryRepository: CategoryRepository,
+        private val permissionRepository: PermissionRepository
+) {
     @Cacheable("categories_page", key = "#page")
     fun findAll(page: Int): List<CategoryDTO> {
         val pageable = PageRequest.of(page - 1, 10)
@@ -28,6 +32,10 @@ class CategoryService(private val categoryRepository: CategoryRepository) {
         category.slug = categoryDTO.slug
         category.description = categoryDTO.description
         category.displayOrder = categoryDTO.display_order
+        category.createTopicPermission =
+                categoryDTO.createTopicPermissionId?.let { permissionId ->
+                    permissionRepository.findById(permissionId).orElse(null)
+                }
         //        category.id = UUID.randomUUID()
         category.createdAt = Instant.now()
         return categoryRepository.save(category).toDTO()

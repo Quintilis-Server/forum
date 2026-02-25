@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "org.quintilis.common.entities",
     "org.quintilis.forum.entities" // Apenas entidades do Fórum (incluindo o User simplificado)
 ])
-@EnableJpaRepositories(basePackages = ["org.quintilis.forum.repositories"])
+@EnableJpaRepositories(basePackages = ["org.quintilis.forum.repositories", "org.quintilis.common.repositories"])
 class ForumApplication
 
 fun main(args: Array<String>) {
