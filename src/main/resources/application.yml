@@ -24,10 +24,4 @@ spring:
     hibernate:
       ddl-auto: update
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          # Onde buscar a chave pública para validar o token
-          jwk-set-uri: http://localhost:9000/oauth2/jwks
-          issuer-uri: http://localhost:9000
+

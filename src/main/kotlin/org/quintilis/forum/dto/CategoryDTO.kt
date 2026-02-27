@@ -11,14 +11,14 @@ import org.quintilis.forum.entities.Category
 @NoArgsConstructor
 @AllArgsConstructor
 data class CategoryDTO(
-        var id: UUID?,
-        var title: String,
-        var slug: String,
-        var description: String?,
-        var displayOrder: Int,
-        var createTopicPermission: PermissionDTO?,
-        var topics: List<TopicDTO>,
-        var createdAt: Instant
+    var id: UUID?,
+    var title: String,
+    var slug: String,
+    var description: String?,
+    var displayOrder: Int,
+    val permissions: List<PermissionDTO>,
+    var topics: List<TopicDTO>,
+    var createdAt: Instant
 ) : BaseDTO<Category> {
     override fun toEntity(): Category {
         return Category().apply {
@@ -27,7 +27,7 @@ data class CategoryDTO(
             this.slug = this@CategoryDTO.slug
             this.description = this@CategoryDTO.description
             this.displayOrder = this@CategoryDTO.displayOrder
-            this.createTopicPermission = this@CategoryDTO.createTopicPermission?.toEntity()
+            this.permissions = this@CategoryDTO.permissions.map { it.toEntity() }.toMutableSet()
             this.createdAt = this@CategoryDTO.createdAt
         }
     }

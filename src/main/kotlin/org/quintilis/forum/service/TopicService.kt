@@ -1,7 +1,10 @@
 package org.quintilis.forum.service
 
+import jakarta.transaction.Transactional
+import org.quintilis.common.entities.auth.User
+import org.quintilis.common.exception.BadRequestException
 import org.quintilis.common.exception.ForbiddenException
-import org.quintilis.common.exception.NotFoundException
+import org.quintilis.common.exception.UnauthorizedException
 import org.quintilis.common.repositories.UserRepository
 import org.quintilis.forum.controller.TopicController
 import org.quintilis.forum.entities.Topic
@@ -22,27 +25,37 @@ class TopicService(
         return topicRepository.findBySlug(slug)
     }
 
-    fun create(topicDTO: TopicController.TopicReceiverDTO, username: String): Topic {
-        val user =
-                userRepository.findByUsername(username) ?: throw NotFoundException("User not found")
+    @Transactional
+    fun create(topicDTO: TopicController.TopicReceiverDTO, user: User): Topic {
+//        val user =
+//                userRepository.findById(java.util.UUID.fromString(userId)).orElse(null)
+//                        ?: throw UnauthorizedException("User not found")
 
         val category =
-                categoryRepository.findBySlug(topicDTO.slug)
-                        ?: throw NotFoundException("Category not found")
+                categoryRepository.findById(topicDTO.categoryId).orElseThrow {
+                    BadRequestException("Category not found", "Category slug not found")
+                }
 
-        if (category.createTopicPermission != null) {
-            val permissionName = category.createTopicPermission!!.name!!
-            if (!user.hasPermission(permissionName)) {
+        if (category.permissions.isNotEmpty()) {
+            if (!user.hasPermission(category.permissions)) {
                 throw ForbiddenException(
-                        "You do not have the required permission ($permissionName) to create a topic in this category."
+                        "You do not have the required permission (${category.permissions.joinToString(", ") { it.name ?: "" }}) to create a topic in this category."
                 )
             }
         }
 
+        val baseSlug =
+                topicDTO.title
+                        .lowercase()
+                        .replace("[^a-z0-9\\s-]".toRegex(), "")
+                        .replace("\\s+".toRegex(), "-")
+        val uniqueSuffix = java.util.UUID.randomUUID().toString().substring(0, 8)
+        val generatedSlug = "$baseSlug-$uniqueSuffix"
+
         val topic =
                 Topic().apply {
                     this.title = topicDTO.title
-                    this.slug = topicDTO.slug
+                    this.slug = generatedSlug
                     this.content = topicDTO.content
                     this.category = category
                     this.author = user

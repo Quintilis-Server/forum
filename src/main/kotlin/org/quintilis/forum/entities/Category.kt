@@ -2,10 +2,13 @@ package org.quintilis.forum.entities
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
@@ -49,9 +52,14 @@ open class Category : BaseEntity<CategoryDTO> {
     @Column(name = "created_at", nullable = false)
     open var createdAt: Instant? = null
 
-    @ManyToOne
-    @JoinColumn(name = "create_topic_permission_id")
-    open var createTopicPermission: Permission? = null
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "category_permissions",
+        schema = "forum",
+        joinColumns = [JoinColumn(name = "category_id")],
+        inverseJoinColumns = [JoinColumn(name = "permission_id")]
+    )
+    open var permissions: MutableSet<Permission> = mutableSetOf()
 
     @OneToMany(mappedBy = "category") open var topics: MutableSet<Topic> = mutableSetOf()
     override fun toDTO(): CategoryDTO {
@@ -62,7 +70,7 @@ open class Category : BaseEntity<CategoryDTO> {
                 description = this.description,
                 displayOrder = this.displayOrder!!,
                 createdAt = this.createdAt ?: Instant.now(),
-                createTopicPermission = this.createTopicPermission?.toDTO(),
+                permissions = this.permissions.map { it.toDTO() }.toList(),
                 topics = this.topics.map { it.toDTO() }
         )
     }
