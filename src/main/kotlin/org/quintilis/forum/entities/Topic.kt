@@ -25,7 +25,7 @@ import org.quintilis.forum.dto.TopicDTO
 @Table(name = "topics", schema = "forum")
 @NoArgsConstructor
 @AllArgsConstructor
-open class Topic : BaseEntity<TopicDTO> {
+open class Topic : BaseEntity<TopicDTO>() {
     @Id
     @ColumnDefault("gen_random_uuid()")
     @Column(name = "id", nullable = false)
@@ -54,10 +54,6 @@ open class Topic : BaseEntity<TopicDTO> {
     open var content: String? = null
 
     @ColumnDefault("0") @Column(name = "views") open var views: Long? = null
-
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    open var createdAt: Instant? = null
 
     @Column(name = "deleted_at") open var deletedAt: Instant? = null
 

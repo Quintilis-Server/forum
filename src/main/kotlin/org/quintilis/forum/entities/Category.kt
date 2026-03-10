@@ -27,7 +27,7 @@ import org.quintilis.forum.dto.CategoryDTO
 @Table(name = "categories", schema = "forum")
 @NoArgsConstructor
 @AllArgsConstructor
-open class Category : BaseEntity<CategoryDTO> {
+open class Category : BaseEntity<CategoryDTO>() {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -46,11 +46,6 @@ open class Category : BaseEntity<CategoryDTO> {
     @Column(name = "description", length = Integer.MAX_VALUE) open var description: String? = null
 
     @ColumnDefault("0") @Column(name = "display_order") open var displayOrder: Int? = null
-
-    @NotNull
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at", nullable = false)
-    open var createdAt: Instant? = null
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

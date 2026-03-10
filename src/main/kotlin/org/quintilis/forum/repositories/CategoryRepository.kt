@@ -1,6 +1,7 @@
 package org.quintilis.forum.repositories
 
 import org.quintilis.common.entities.auth.Permission
+import org.quintilis.common.repositories.BaseRepository
 import java.util.UUID
 import org.quintilis.forum.entities.Category
 import org.springframework.cache.annotation.CacheEvict
@@ -9,7 +10,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface CategoryRepository : JpaRepository<Category, UUID> {
+interface CategoryRepository : BaseRepository<Category, UUID> {
 
     override fun findAll(): List<Category>
 

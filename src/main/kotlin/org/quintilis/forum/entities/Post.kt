@@ -21,7 +21,7 @@ import org.quintilis.forum.dto.PostDTO
 @Table(name = "posts", schema = "forum")
 @NoArgsConstructor
 @AllArgsConstructor
-open class Post : BaseEntity<PostDTO> {
+open class Post : BaseEntity<PostDTO>() {
     @Id
     @ColumnDefault("gen_random_uuid()")
     @Column(name = "id", nullable = false)
@@ -41,9 +41,6 @@ open class Post : BaseEntity<PostDTO> {
     @Column(name = "content", nullable = false, length = Integer.MAX_VALUE)
     open var content: String? = null
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at")
-    open var createdAt: Instant? = null
     override fun toDTO(): PostDTO {
         return PostDTO(
                 id = this.id,
