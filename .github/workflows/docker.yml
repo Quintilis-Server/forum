@@ -21,7 +21,7 @@ jobs:
             - name: Checkout forum
               uses: actions/checkout@v4
               with:
-                  path: gateway
+                  path: forum
             
             - name: Checkout common
               uses: actions/checkout@v4
