@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional
 import org.quintilis.common.entities.auth.User
 import org.quintilis.common.exception.BadRequestException
 import org.quintilis.common.exception.ForbiddenException
-import org.quintilis.common.repositories.UserRepository
 import org.quintilis.common.service.BaseService
 import org.quintilis.forum.controller.TopicController
 import org.quintilis.forum.dto.TopicDTO

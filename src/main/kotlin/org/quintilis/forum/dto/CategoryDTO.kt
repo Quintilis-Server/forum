@@ -11,15 +11,15 @@ import org.quintilis.forum.entities.Category
 @NoArgsConstructor
 @AllArgsConstructor
 data class CategoryDTO(
-    var id: UUID?,
+//    var id: UUID?,
     var title: String,
     var slug: String,
     var description: String?,
     var displayOrder: Int,
     val permissions: List<PermissionDTO>,
     var topics: List<TopicDTO>,
-    var createdAt: Instant
-) : BaseDTO<Category> {
+//    var createdAt: Instant
+) : BaseDTO<Category, UUID>() {
     override fun toEntity(): Category {
         return Category().apply {
             this.id = this@CategoryDTO.id

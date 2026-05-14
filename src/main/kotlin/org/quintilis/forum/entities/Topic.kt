@@ -61,14 +61,18 @@ open class Topic : BaseEntity<TopicDTO>() {
 
     override fun toDTO(): TopicDTO {
         return TopicDTO(
-                id = this.id,
-                title = this.title!!,
-                slug = this.slug!!,
-                content = this.content!!,
-                views = this.views ?: 0,
-                createdAt = this.createdAt ?: Instant.now(),
-                author = this.author?.toSummaryDTO()!!,
-                posts = this.posts.map { it.toDTO() }.toList(),
-        )
+//                id = this.id,
+            title = this.title!!,
+            slug = this.slug!!,
+            content = this.content!!,
+            views = this.views ?: 0,
+//                createdAt = this.createdAt ?: Instant.now(),
+            author = this.author?.toSummaryDTO()!!,
+            posts = this.posts.map { it.toDTO() }.toList(),
+        ).apply {
+            // Preenchemos os campos herdados da BaseDTO
+            this.id = id
+            this.createdAt = createdAt
+        }
     }
 }

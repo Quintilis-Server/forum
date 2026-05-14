@@ -12,11 +12,11 @@ import org.quintilis.forum.entities.Post
 @NoArgsConstructor
 @AllArgsConstructor
 data class PostDTO(
-    var id: UUID?,
+//    var id: UUID?,
     var author: UserSummaryDTO,
-    var createdAt: Instant,
+//    var createdAt: Instant,
     var content: String,
-): BaseDTO<Post> {
+): BaseDTO<Post, UUID>() {
     override fun toEntity(): Post {
         return Post().apply {
             id = this@PostDTO.id

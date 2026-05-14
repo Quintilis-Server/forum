@@ -2,9 +2,8 @@ package org.quintilis.forum.service
 
 import jakarta.transaction.Transactional
 import org.quintilis.common.entities.auth.User
-import org.quintilis.common.exception.NotFoundException
-import org.quintilis.common.repositories.PermissionRepository
-import org.quintilis.common.repositories.UserRepository
+import org.quintilis.common.repositories.auth.PermissionRepository
+import org.quintilis.common.repositories.auth.UserRepository
 import org.quintilis.common.service.BaseService
 import org.quintilis.forum.controller.CategoryController
 import org.quintilis.forum.dto.CategoryDTO
@@ -57,7 +56,7 @@ class CategoryService(
         entity.displayOrder = dto.displayOrder
 
         // Assumindo que o seu CategoryDTO tem uma lista de IDs de permissão
-        val permissionIds = dto.permissions.map { it.id }
+        val permissionIds = dto.permissions.map { it.id }.filterNotNull()
         val perms = permissionRepository.findAllById(permissionIds)
         entity.permissions.clear()
         entity.permissions.addAll(perms)
@@ -85,11 +84,10 @@ class CategoryService(
     }
 
     @Transactional
-    @CacheEvict("category_slug", "category", "categories_page", allEntries = true)
+    @CacheEvict(value = ["category", "category_slug", "categories_page"], allEntries = true)
     override fun delete(id: UUID, hardDelete: Boolean): CategoryDTO {
         return super.delete(id, hardDelete)
     }
-
     // ========================================================================
     // 3. MÉTODOS CUSTOMIZADOS
     // ========================================================================

@@ -43,10 +43,12 @@ open class Post : BaseEntity<PostDTO>() {
 
     override fun toDTO(): PostDTO {
         return PostDTO(
-                id = this.id,
                 author = this.author?.toSummaryDTO()!!,
-                createdAt = this.createdAt ?: Instant.now(),
                 content = this.content ?: ""
-        )
+        ).apply {
+            // Preenchemos os campos herdados da BaseDTO
+            this.id = id
+            this.createdAt = createdAt
+        }
     }
 }

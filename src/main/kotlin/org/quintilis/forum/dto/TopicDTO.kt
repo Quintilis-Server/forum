@@ -12,15 +12,15 @@ import org.quintilis.forum.entities.Topic
 @NoArgsConstructor
 @AllArgsConstructor
 data class TopicDTO(
-    var id: UUID?,
+//    var id: UUID?,
     var title: String,
     var slug: String,
     var content: String,
     var views: Long,
-    var createdAt: Instant,
+//    var createdAt: Instant,
     var author: UserSummaryDTO,
     var posts: List<PostDTO>
-): BaseDTO<Topic> {
+): BaseDTO<Topic, UUID>() {
     override fun toEntity(): Topic {
         return Topic().apply {
             id = this@TopicDTO.id

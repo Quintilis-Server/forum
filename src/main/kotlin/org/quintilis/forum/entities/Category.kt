@@ -59,14 +59,18 @@ open class Category : BaseEntity<CategoryDTO>() {
     @OneToMany(mappedBy = "category") open var topics: MutableSet<Topic> = mutableSetOf()
     override fun toDTO(): CategoryDTO {
         return CategoryDTO(
-                id = this.id ?: java.util.UUID.randomUUID(),
-                title = this.title ?: "",
-                slug = this.slug!!,
-                description = this.description,
-                displayOrder = this.displayOrder!!,
-                createdAt = this.createdAt ?: Instant.now(),
-                permissions = this.permissions.map { it.toDTO() }.toList(),
-                topics = this.topics.map { it.toDTO() }
-        )
+//                id = this.id ?: java.util.UUID.randomUUID(),
+            title = this.title ?: "",
+            slug = this.slug!!,
+            description = this.description,
+            displayOrder = this.displayOrder!!,
+//                createdAt = this.createdAt ?: Instant.now(),
+            permissions = this.permissions.map { it.toDTO() }.toList(),
+            topics = this.topics.map { it.toDTO() }
+        ).apply {
+            // Preenchemos os campos herdados da BaseDTO
+            this.id = id
+            this.createdAt = createdAt
+        }
     }
 }

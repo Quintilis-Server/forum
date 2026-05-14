@@ -1,6 +1,7 @@
 package org.quintilis.forum.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import jakarta.validation.Valid
 import org.quintilis.common.controller.BaseController
 import org.quintilis.common.entities.auth.User
 import org.quintilis.common.exception.NotFoundException
@@ -11,6 +12,8 @@ import org.quintilis.forum.entities.Category
 import org.quintilis.forum.service.CategoryService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
@@ -44,4 +47,15 @@ class CategoryController(
             ?: throw NotFoundException("Category not found")
         return ApiResponse.success(category)
     }
+
+//    @GetMapping("/top")
+//    fun getTopCategories(): ApiResponse<List<CategoryDTO>> {
+//
+//    }
+
+//    @PostMapping("/new")
+//    override fun create(@Valid @RequestBody dto: CategoryReceiverDTO): ApiResponse<CategoryDTO> {
+//        println("aaaaaaaa criar categoria")
+//        return super.create(dto)
+//    }
 }
